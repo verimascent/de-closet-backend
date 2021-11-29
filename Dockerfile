@@ -1,4 +1,4 @@
-FROM ruby: 2.7.4
+FROM ruby:2.7.4
 
 # Install NodeJS and Yarn
 RUN apt-get update
