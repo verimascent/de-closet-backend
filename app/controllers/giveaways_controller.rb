@@ -1,0 +1,2 @@
+class GiveawaysController < ApplicationController
+end
