@@ -4,6 +4,7 @@ class Api::V1::UserSessionsController < Devise::SessionsController
   def create
     user = get_user
     # generate the token for API authentication
+    puts "request #{request}"
     token = Tiddle.create_and_return_token(user, request)
     render json: {
       user: user,
@@ -17,12 +18,12 @@ class Api::V1::UserSessionsController < Devise::SessionsController
   private
 
   def get_user
-    open_id = fetch_wx_open_id(params[:code])["openid"]
-    user = User.find_by(open_id: openid)
-    if user.blank
+    wechat_id = fetch_wx_open_id(params[:code])["openid"]
+    user = User.find_by(wechat_id: wechat_id)
+    if user.blank?
       user = User.create!(
-        open_id: open_id,
-        email: "#{openid.downcase}_#{SecureRandom.hex(3)}@wx.com", # create some random email
+        wechat_id: wechat_id,
+        email: "#{wechat_id.downcase}_#{SecureRandom.hex(3)}@wx.com", # create some random email
         password: Devise.friendly_token(20)
       )
     end
