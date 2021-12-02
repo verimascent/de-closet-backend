@@ -1,7 +1,7 @@
 class Api::V1::UsersController < Api::V1::BaseController
-  def index
-    current_user.update(maxNumber: params[:maxNumber])
-    render ison: current_user
+  def update
+    current_user.update(user_params)
+    render json: current_user
   end
 
   def show
