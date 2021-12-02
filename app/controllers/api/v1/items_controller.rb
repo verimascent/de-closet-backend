@@ -3,7 +3,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
   def index
     @items = current_user.items
     render json: @items
-    # render json: @user
   end
 
   private
