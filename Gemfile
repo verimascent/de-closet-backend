@@ -38,6 +38,9 @@ gem 'devise'
 gem 'tiddle'
 gem 'rest-client', '>= 2.0.1'
 
+gem 'activestorage-aliyun'
+gem 'image_processing'
+
 group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
