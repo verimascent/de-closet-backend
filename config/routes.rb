@@ -10,7 +10,7 @@ Rails.application.routes.draw do
         post 'login', to: 'user_sessions#create', as: 'login'
         post 'test_login', to: 'user_sessions#test_login', as: 'test_login'
       end
-      resources :items, only: [:index]
+      resources :items, only: [:index, :show]
       patch 'users/update', to: 'users#update'
     end
   end
