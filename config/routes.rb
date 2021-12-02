@@ -11,7 +11,7 @@ Rails.application.routes.draw do
         post 'test_login', to: 'user_sessions#test_login', as: 'test_login'
       end
       resources :items, only: [:index]
-      put 'users/update', to: 'users#update'
+      patch 'users/update', to: 'users#update'
     end
   end
 end
