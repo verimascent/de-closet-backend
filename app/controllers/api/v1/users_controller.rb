@@ -10,7 +10,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   private
 
   def user_params
-    # { user: { max_number: 5 } }
+    # { user: { max_number: 50 } }
     params.require(:user).permit(:max_number)
   end
 end
