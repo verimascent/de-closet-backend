@@ -12,4 +12,8 @@ class Api::V1::ItemsController < Api::V1::BaseController
   def find_user
     @user = User.find(params[:id])
   end
+
+  def item_params
+    params.require(:item).permit(:is_giveaway, :item_type, :remark, photos:[])
+  end
 end
