@@ -106,7 +106,6 @@ GEM
     faker (2.19.0)
       i18n (>= 1.6, < 2)
     ffi (1.15.4)
-    ffi (1.15.4-x86-mingw32)
     font-awesome-sass (5.15.1)
       sassc (>= 1.11)
     globalid (1.0.0)
@@ -141,15 +140,10 @@ GEM
     msgpack (1.4.2)
     netrc (0.11.0)
     nio4r (2.5.8)
-    nokogiri (1.12.5-x86-mingw32)
-      racc (~> 1.4)
-    nokogiri (1.12.5-x86_64-darwin)
-      racc (~> 1.4)
     nokogiri (1.12.5-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     pg (1.2.3)
-    pg (1.2.3-x86-mingw32)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -208,12 +202,6 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rest-client (2.1.0-x86-mingw32)
-      ffi (~> 1.9)
-      http-accept (>= 1.7.0, < 2.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 4.0)
-      netrc (~> 0.8)
     rexml (3.2.5)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
@@ -254,12 +242,9 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2021.5)
-      tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
-    unf_ext (0.0.8-x86-mingw32)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.0)
@@ -284,8 +269,6 @@ GEM
     zeitwerk (2.5.1)
 
 PLATFORMS
-  x86-mingw32
-  x86_64-darwin-19
   x86_64-linux
 
 DEPENDENCIES
