@@ -37,6 +37,7 @@ gem 'faker'
 gem 'devise'
 gem 'tiddle'
 gem 'rest-client', '>= 2.0.1'
+gem 'wdm', '>=0.1.0'
 
 gem 'activestorage-aliyun'
 gem 'image_processing'
