@@ -1,7 +1,7 @@
 class Api::V1::UsersController < Api::V1::BaseController
-  def index
-    current_user.update(maxNumber: params[:maxNumber])
-    render ison: current_user
+  def update
+    current_user.update(user_params)
+    render json: current_user
   end
 
   def show
@@ -10,6 +10,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   private
 
   def user_params
-    params.require(:user).permit(:maxNumber)
+    # { user: { max_number: 5 } }
+    params.require(:user).permit(:max_number)
   end
 end
