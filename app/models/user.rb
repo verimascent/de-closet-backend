@@ -5,4 +5,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable, :token_authenticatable # add this for tiddle
 
   has_many :authentication_tokens
+  has_many :items
 end
