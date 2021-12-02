@@ -15,6 +15,22 @@ class Api::V1::UserSessionsController < Devise::SessionsController
     }
   end
 
+  def test_login
+    user = User.find_by email: params[:email]
+    if user.blank?
+      user = User.create(email: params[:email], password: '12345678')
+    end
+
+    token = Tiddle.create_and_return_token(user, request)
+    render json: {
+      user: user,
+      headers: {
+        "X-USER-EMAIL"=> user.email,
+        "X-USER-TOKEN"=> token
+      }
+    }
+  end
+
   private
 
   def get_user
