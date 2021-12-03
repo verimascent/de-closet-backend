@@ -19,8 +19,24 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def create
-    @item = Item.create!(item_params)
-    redirect_to @item
+    @item = Item.new(item_params)
+    @item.user = current_user
+    if @item.save
+      render json: @item
+    else
+      puts "THIS IS ERROR MES,#{@item.errors.full_messages}"
+    end
+
+  end
+
+  def upload
+    @item = Item.find(params[:id])
+    # params[:file]
+    if @item.photo.attach(params.require(:file))
+      render json: { msg: 'photo uploaded' }
+    else
+
+    end
   end
 
   private
