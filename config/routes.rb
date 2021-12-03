@@ -10,7 +10,12 @@ Rails.application.routes.draw do
         post 'login', to: 'user_sessions#create', as: 'login'
         post 'test_login', to: 'user_sessions#test_login', as: 'test_login'
       end
-      resources :items, only: [:index, :show]
+      resources :items, only: [:index, :show, :create] do
+        member do
+          post 'upload'
+        end
+
+      end
       put 'users/update', to: 'users#update'
     end
   end
