@@ -4,11 +4,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
     render json: @items
   end
 
-  def create
-    @item = Item.create!(item_params)
-    redirect_to @item
-  end
-
   def show
     @item = Item.find(params[:id])
     if current_user.items.include?(@item)
@@ -18,6 +13,14 @@ class Api::V1::ItemsController < Api::V1::BaseController
         :error => "You have no rights to access that photo."
       }
     end
+  end
+
+  def new
+  end
+
+  def create
+    @item = Item.create!(item_params)
+    redirect_to @item
   end
 
   private
