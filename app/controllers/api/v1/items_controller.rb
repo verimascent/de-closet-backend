@@ -1,7 +1,14 @@
 class Api::V1::ItemsController < Api::V1::BaseController
   def index
     @items = current_user.items
-    render json: @items
+    @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
+    @arr = []
+    @types.each do |type|
+      hash = { category: type, items: [] }
+      hash[:items] = @items.where(item_type: type)
+      @arr << hash
+    end
+    render json: @arr
   end
 
   def show
@@ -15,9 +22,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
     end
   end
 
-  def new
-  end
-
   def create
     @item = Item.new(item_params)
     @item.user = current_user
@@ -26,12 +30,13 @@ class Api::V1::ItemsController < Api::V1::BaseController
     else
       puts "THIS IS ERROR MES,#{@item.errors.full_messages}"
     end
+  end
 
+  def update
   end
 
   def upload
     @item = Item.find(params[:id])
-    # params[:file]
     if @item.photo.attach(params.require(:file))
       render json: { msg: 'photo uploaded' }
     else
@@ -42,6 +47,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
   private
 
   def item_params
-    params.require(:item).permit(:is_giveaway, :item_type, :remark, :photos)
+    params.require(:item).permit(:is_giveaway, :item_type, :remark, :photo, tag_list: [])
   end
 end

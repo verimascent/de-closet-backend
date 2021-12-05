@@ -41,6 +41,7 @@ gem 'wdm', '>=0.1.0' if Gem.win_platform?
 
 gem 'activestorage-aliyun'
 gem 'image_processing'
+gem 'acts-as-taggable-on'
 
 group :development, :test do
   gem 'pry-byebug'
