@@ -47,6 +47,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
   private
 
   def item_params
-    params.require(:item).permit(:is_giveaway, :item_type, :remark, :photo, tag_list: [])
+    params.require(:item).permit(:is_giveaway, :item_type, :remark, :photo, item_tags: [])
   end
 end
