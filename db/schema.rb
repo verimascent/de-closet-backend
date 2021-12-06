@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 2021_12_05_063661) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer "max_number", default: 200
+    t.integer "max_number", default: 0
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
