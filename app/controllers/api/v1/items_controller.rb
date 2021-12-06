@@ -60,6 +60,11 @@ class Api::V1::ItemsController < Api::V1::BaseController
     end
   end
 
+  def select_giveaways
+    @item_gas = current_user.items.where(is_giveaway: true)
+    render json: @item_gas
+  end
+
   private
 
   def item_params
