@@ -14,7 +14,7 @@ Rails.application.routes.draw do
         member do
           post 'upload'
         end
-
+      resources :users, only: [:show, :update]
       end
       put 'users/update', to: 'users#update'
     end

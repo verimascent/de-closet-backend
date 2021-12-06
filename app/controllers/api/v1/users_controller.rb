@@ -1,10 +1,11 @@
 class Api::V1::UsersController < Api::V1::BaseController
-  def update
-    current_user.update(user_params)
+  def show
     render json: current_user
   end
 
-  def show
+  def update
+    current_user.update(user_params)
+    render json: current_user
   end
 
   private
