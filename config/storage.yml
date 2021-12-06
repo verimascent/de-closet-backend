@@ -34,7 +34,7 @@ local:
 #   mirrors: [ amazon, google, microsoft ]
 aliyun:
   service: Aliyun
-  bucket: <%= Rails.application.credentials.dig(:aliyun, :bucket) %>
+  bucket: <%= Rails.application.credentials.dig(:aliyun, :bucket_name) %>
   endpoint: <%= Rails.application.credentials.dig(:aliyun, :endpoint) %>
   mode: "private"
   access_key_id: <%= Rails.application.credentials.dig(:aliyun, :access_key_id) %>
