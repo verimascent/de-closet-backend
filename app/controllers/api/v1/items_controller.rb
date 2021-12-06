@@ -1,4 +1,6 @@
 class Api::V1::ItemsController < Api::V1::BaseController
+  before_action :find_item, only: [:show, :update, :destroy, :upload]
+
   def index
     @items = current_user.items
     @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
@@ -6,7 +8,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
     @types.map! do |type|
        { category: type, items: @items.where(item_type: type).map{|item| item.to_h} }
     end
-    # render json: @arr
     render json: {
       user: current_user,
       user_items: @types
@@ -14,7 +15,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def show
-    @item = Item.find(params[:id])
     if current_user.items.include?(@item)
       render json: @item
     else
@@ -30,15 +30,29 @@ class Api::V1::ItemsController < Api::V1::BaseController
     if @item.save
       render json: @item
     else
-      puts "THIS IS ERROR MES,#{@item.errors.full_messages}"
+      puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
     end
   end
 
   def update
+    if @item.update(item_params)
+      render json: @item
+    else
+      puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
+    end
+  end
+
+  def destroy
+    if @item.destroy
+      render json: {
+        messege: 'This item has been successfully deleted.'
+      }
+    else
+      puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
+    end
   end
 
   def upload
-    @item = Item.find(params[:id])
     if @item.photo.attach(params.require(:file))
       render json: { msg: 'photo uploaded' }
     else
@@ -50,5 +64,9 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   def item_params
     params.require(:item).permit(:is_giveaway, :item_type, :remark, :photo, tag_list: [])
+  end
+
+  def find_item
+    @item = Item.find(params[:id])
   end
 end
