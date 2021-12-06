@@ -7,7 +7,10 @@ class Api::V1::ItemsController < Api::V1::BaseController
        { category: type, items: @items.where(item_type: type).map{|item| item.to_h} }
     end
     # render json: @arr
-    render json: @types
+    render json: {
+      user: current_user,
+      user_items: @types
+    }
   end
 
   def show
