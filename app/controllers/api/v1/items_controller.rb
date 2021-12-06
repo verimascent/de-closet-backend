@@ -3,12 +3,11 @@ class Api::V1::ItemsController < Api::V1::BaseController
     @items = current_user.items
     @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
     @arr = []
-    @types.each do |type|
-      hash = { category: type, items: [] }
-      hash[:items] = @items.where(item_type: type)
-      @arr << hash
+    @types.map! do |type|
+       { category: type, items: @items.where(item_type: type).map{|item| item.to_h} }
     end
-    render json: @arr
+    # render json: @arr
+    render json: @types
   end
 
   def show
