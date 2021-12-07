@@ -20,6 +20,8 @@ Rails.application.routes.draw do
       end
 
       resources :users, only: [:show, :update]
+
+      resources :giveaways, only: [:create]
     end
   end
 end
