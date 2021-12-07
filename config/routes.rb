@@ -19,8 +19,7 @@ Rails.application.routes.draw do
 
       resources :users, only: [:show, :update]
 
-      # get '/giveaways', to: 'items#giveaways'
-      resources :giveaways, only: [:index, :create]
+      resources :giveaways, only: [:create]
     end
   end
 end

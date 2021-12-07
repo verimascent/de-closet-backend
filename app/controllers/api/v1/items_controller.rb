@@ -19,9 +19,15 @@ class Api::V1::ItemsController < Api::V1::BaseController
         @user = User.find(params[:user_id])
       end
       @items = @user.items.where(is_giveaway: true)
-      render json: @items.map { |giveaway| giveaway.to_h }
+      @items = @items.map do |item|
+        item = item.to_h
+        item['giveaway_info'] = Giveaway.where(item_id: item['id'].to_i)
+      end
+      render json: {
+        items: @items
+      }
     else
-
+      render json: { message: 'Please provide right req_type: my_closet OR giveaways.'}
     end
 
   end
@@ -57,7 +63,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
   def destroy
     if @item.destroy
       render json: {
-        messege: 'This item has been successfully deleted.'
+        message: 'This item has been successfully deleted.'
       }
     else
       puts "THIS IS ERROR MES, #{@item.errors.full_messages}"

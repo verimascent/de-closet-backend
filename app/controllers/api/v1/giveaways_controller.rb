@@ -1,11 +1,5 @@
 class Api::V1::GiveawaysController < Api::V1::BaseController
 
-  def index
-    @giveaways = current_user.items.where(is_giveaway: true)
-    @giveaways = @giveaways.map { |giveaway| giveaway.to_h }
-    render json: @giveaways
-  end
-
   # The giveaway shall be created by the user who claims that item
   def create
     @item = Item.find(params[:item_id])
