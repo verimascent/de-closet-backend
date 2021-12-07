@@ -62,7 +62,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   def giveaways
     @giveaways = current_user.items.where(is_giveaway: true)
-    render json: @giveaways
+    render json: @giveaways.map { |giveaway| giveaway.to_h }
   end
 
   private
