@@ -23,6 +23,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
         item = item.to_h
         info = Giveaway.where(item_id: item['id'].to_i)
         item['giveaway_info'] = info if info
+        item
       end
       render json: {
         items: @items
