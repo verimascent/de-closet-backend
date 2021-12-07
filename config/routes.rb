@@ -11,6 +11,8 @@ Rails.application.routes.draw do
         post 'test_login', to: 'user_sessions#test_login', as: 'test_login'
       end
 
+      get '/giveaways', to: 'items#giveaways'
+
       resources :items, only: [:index, :show, :create, :update, :destroy] do
         member do
           post 'upload'
