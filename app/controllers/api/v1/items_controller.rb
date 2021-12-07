@@ -2,16 +2,24 @@ class Api::V1::ItemsController < Api::V1::BaseController
   before_action :find_item, only: [:show, :update, :destroy, :upload]
 
   def index
-    @items = current_user.items.where(is_giveaway: false)
-    @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
-    @arr = []
-    @types.map! do |type|
-       { category: type, items: @items.where(item_type: type).map {|item| item.to_h} }
+    if params[:req_type] == 'my_closet'
+      @items = current_user.items.where(is_giveaway: false)
+      @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
+      @arr = []
+      @types.map! do |type|
+        { category: type, items: @items.where(item_type: type).map {|item| item.to_h} }
+      end
+      render json: {
+        user: current_user,
+        user_items: @types
+      }
+    elsif params[:req_type] == 'giveaways'
+      @items = current_user.items.where(is_giveaway: true)
+      render json: @items.map { |giveaway| giveaway.to_h }
+    else
+
     end
-    render json: {
-      user: current_user,
-      user_items: @types
-    }
+
   end
 
   def show
@@ -58,11 +66,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
     else
       render json: { err: 'fail to upload' }
     end
-  end
-
-  def giveaways
-    @giveaways = current_user.items.where(is_giveaway: true)
-    render json: @giveaways.map { |giveaway| giveaway.to_h }
   end
 
   private
