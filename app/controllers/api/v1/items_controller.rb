@@ -2,11 +2,11 @@ class Api::V1::ItemsController < Api::V1::BaseController
   before_action :find_item, only: [:show, :update, :destroy, :upload]
 
   def index
-    @items = current_user.items
+    @items = current_user.items.where(is_giveaway: false)
     @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
     @arr = []
     @types.map! do |type|
-       { category: type, items: @items.where(item_type: type).map{|item| item.to_h} }
+       { category: type, items: @items.where(item_type: type).map {|item| item.to_h} }
     end
     render json: {
       user: current_user,
@@ -60,9 +60,9 @@ class Api::V1::ItemsController < Api::V1::BaseController
     end
   end
 
-  def select_giveaways
-    @item_gas = current_user.items.where(is_giveaway: true)
-    render json: @item_gas
+  def giveaways
+    @giveaways = current_user.items.where(is_giveaway: true)
+    render json: @giveaways
   end
 
   private
