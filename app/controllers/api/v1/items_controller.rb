@@ -19,19 +19,13 @@ class Api::V1::ItemsController < Api::V1::BaseController
         @user = User.find(params[:user_id])
       end
       @items = @user.items.where(is_giveaway: true)
-      @items = @items.map do |item|
-        item = item.to_h
-        info = Giveaway.where(item_id: item['id'].to_i)
-        item['giveaway_info'] = info if info
-        item
-      end
+      @items = @items.map { |item| item.all_info }
       render json: {
         items: @items
       }
     else
       render json: { message: 'Please provide right req_type: my_closet OR giveaways.'}
     end
-
   end
 
   def show

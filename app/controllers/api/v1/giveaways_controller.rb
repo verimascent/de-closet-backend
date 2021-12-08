@@ -22,40 +22,27 @@ class Api::V1::GiveawaysController < Api::V1::BaseController
   # This update action can only be invoked by the owner!
   def update
     @giveaway = Giveaway.find(giveaway_params[:id])
-    @item = @giveaway.item
 
     unless current_user == @giveaway.item.user
       render json: { message: 'You are not permitted to change the status of this giveaway.' }
       return
     end
 
-    p 'THIS IS giveaway_params'
-    p giveaway_params
-    p 'We use KEY'
-    p giveaway_params[:user_id]
-    p giveaway_params[:user_id].class
-    p 'We use quotes'
-    p giveaway_params['user_id']
-    p giveaway_params['user_id'].class
-    return
-
+    @item = @giveaway.item
     @giveaways_all = @item.giveaways
-
-
-
-
-
-    @ga_accept = @giveaways_all.select { |ga| ga.status == 'gone' }
-
-    if params[:status] == 'gone'
-
+    @giveaways_all.each do |ga|
+      if ga.user.id == giveaway_params[:user_id]
+        ga.update(status: 'accepted')
+      else
+        ga.update(status: 'gone')
+      end
     end
 
-    if @ga_accept.empty? && @giveaway.update(giveaway_params)
-      # render json:
-    else
+    @item.user = User.find(giveaway_params[:user_id])
 
-    end
+    render json: {
+      item: @item.all_info
+    }
   end
 
   private

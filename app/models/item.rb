@@ -9,4 +9,10 @@ class Item < ApplicationRecord
     h['photo'] = photo.service_url
     h
   end
+
+  def all_info
+    @item = self.to_h
+    @item['giveaway_info'] = Giveaway.where(item_id: @item['id'].to_i)
+    @item
+  end
 end
