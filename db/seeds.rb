@@ -8,7 +8,7 @@
 
 require 'faker'
 
-types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
+types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
 status_all = ['accept', 'reject', 'pending']
 50.times do
   user = User.create!(username: Faker::Name.name, wechat_id: Faker::Alphanumeric.alphanumeric(number: 10), email: Faker::Internet.email, password: Faker::Internet.password)

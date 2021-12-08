@@ -5,7 +5,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
     if params[:req_type] == 'my_closet'
       @items = current_user.items.where(is_giveaway: false)
       @num = @items.length
-      @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
+      @types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
       @arr = []
       @types.map! do |type|
         { category: type, items: @items.where(item_type: type).map {|item| item.to_h} }
