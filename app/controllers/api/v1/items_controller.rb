@@ -4,6 +4,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
   def index
     if params[:req_type] == 'my_closet'
       @items = current_user.items.where(is_giveaway: false)
+      @num = @items.length
       @types = ['Top', 'Bottom', 'Coat', 'Shoes', 'Dress']
       @arr = []
       @types.map! do |type|
@@ -11,6 +12,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
       end
       render json: {
         user: current_user,
+        number_of_items: @num,
         user_items: @types
       }
     elsif params[:req_type] == 'giveaways'
@@ -29,11 +31,11 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def show
-    if current_user.items.include?(@item)
+    if @item.user == current_user
       render json: { item: @item.to_h }
     else
       render json: {
-        :error => "You have no rights to access that photo."
+        :error => "You have no rights to access that item."
       }
     end
   end
