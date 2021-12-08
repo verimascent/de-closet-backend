@@ -30,7 +30,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   def show
     if current_user.items.include?(@item)
-      render json: @item
+      render json: { item: @item.to_h }
     else
       render json: {
         :error => "You have no rights to access that photo."
@@ -42,7 +42,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
     @item = Item.new(item_params)
     @item.user = current_user
     if @item.save
-      render json: @item
+      render json: { item: @item.to_h }
     else
       puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
     end
@@ -50,7 +50,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   def update
     if @item.update(item_params)
-      render json: @item
+      render json: { item: @item.to_h }
     else
       puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
     end
