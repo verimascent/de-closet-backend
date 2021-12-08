@@ -2,10 +2,10 @@ class Api::V1::ItemsController < Api::V1::BaseController
   before_action :find_item, only: [:show, :update, :destroy, :upload]
 
   def index
+    @types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
+    @items = current_user.items.where(is_giveaway: false, item_type: @types)
+    @num = @items.length
     if params[:req_type] == 'my_closet'
-      @types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
-      @items = current_user.items.where(is_giveaway: false, item_type: @types)
-      @num = @items.length
       @arr = []
       @types.map! do |type|
         { category: type, items: @items.where(item_type: type).map {|item| item.to_h} }
@@ -23,6 +23,8 @@ class Api::V1::ItemsController < Api::V1::BaseController
       @items = @user.items.where(is_giveaway: true)
       @items = @items.map { |item| item.all_info }
       render json: {
+        user: current_user,
+        number_of_items: @num,
         items: @items
       }
     else
