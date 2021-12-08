@@ -4,7 +4,6 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def update
-    p user_params
     current_user.update(user_params)
     render json: current_user
   end

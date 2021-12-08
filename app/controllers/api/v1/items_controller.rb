@@ -16,11 +16,13 @@ class Api::V1::ItemsController < Api::V1::BaseController
         user_items: @types
       }
     elsif params[:req_type] == 'giveaways'
+      @types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
       @user = current_user
       if params[:user_id].present?
         @user = User.find(params[:user_id])
       end
-      @items = @user.items.where(is_giveaway: true)
+      @items = @user.items.where(is_giveaway: true, item_type: @types)
+      @num = @items.length
       @items = @items.map { |item| item.all_info }
       render json: {
         user: current_user,
