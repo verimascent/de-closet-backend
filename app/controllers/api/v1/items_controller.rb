@@ -7,7 +7,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
     request = arr_req.include?(params[:req_type]) ? params[:req_type] : 'my_closet'
     info = send(request, types)
-    info[:user_items] = filter(params[:tag_array]) if params[:tag_array]
+    info[:user_items] = filter(params[:tag_array], types) if params[:tag_array]
     render json: info
   end
 
@@ -78,20 +78,21 @@ class Api::V1::ItemsController < Api::V1::BaseController
     user = User.find(params[:user_id]) if params[:user_id].present?
     items = user.items.out # .where(is_giveaway: true, item_type: array)
     num = items.length
-    array.map! do |type|
-      { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
-    end
+    items = items.map { |item| item.all_info }
     return {
       user: current_user.to_h,
       number_of_items: num,
-      items: array
+      items: items
     }
   end
 
-  def filter(tags)
+  def filter(tags, array)
     items = Item.tagged_with(tags, :match_all => true)
-    items = items.map { |item| item.all_info }
-    items
+    num = items.length
+    array.map! do |type|
+      { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
+    end
+    return array
   end
 
   def item_params
