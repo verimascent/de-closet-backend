@@ -87,7 +87,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def filter(tags, array)
-    items = current_user.items.tagged_with(tags)
+    items = current_user.items.tagged_with(tags, any: true)
     arr = array.map do |type|
       { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
     end
