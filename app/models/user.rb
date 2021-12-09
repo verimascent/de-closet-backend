@@ -4,6 +4,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :trackable, :token_authenticatable # add this for tiddle
 
-  has_many :authentication_tokens
+  has_many :authentication_tokens, dependent: :destroy
   has_many :items, dependent: :destroy
 end
