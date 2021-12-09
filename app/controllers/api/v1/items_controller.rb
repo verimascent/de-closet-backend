@@ -12,7 +12,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def show
-    if @item.user == current_user || params[:req_type] == 'giveaways'
+    if @item.user == current_user || @item.is_giveaway
       render json: { item: @item.to_h }
     else
       render json: {
