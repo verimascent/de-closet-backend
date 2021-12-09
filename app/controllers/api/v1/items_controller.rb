@@ -4,10 +4,11 @@ class Api::V1::ItemsController < Api::V1::BaseController
   def index
     types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
     arr_req = ['my_closet', 'giveaways']
-
+    num = current_user.items.closet.size
     request = arr_req.include?(params[:req_type]) ? params[:req_type] : 'my_closet'
     info = send(request, types)
     info[:user_items] = filter(params[:tag_array], types) if params[:tag_array]
+    info[:number_of_items] = num
     render json: info
   end
 
@@ -62,13 +63,13 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   def my_closet(array)
     items = current_user.items.closet #.where(is_giveaway: false, item_type: array)
-    num = items.length
+    # num = items.length
     arr = array.map do |type|
       { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
     end
     return {
       user: current_user.to_h,
-      number_of_items: num,
+      # number_of_items: num,
       user_items: arr
     }
   end
@@ -77,11 +78,11 @@ class Api::V1::ItemsController < Api::V1::BaseController
     user = current_user
     user = User.find(params[:user_id]) if params[:user_id].present?
     items = user.items.out # .where(is_giveaway: true, item_type: array)
-    num = items.length
+    # num = items.length
     items = items.map { |item| item.all_info }
     return {
-      user: current_user.to_h,
-      number_of_items: num,
+      user: user.to_h,
+      # number_of_items: num,
       items: items
     }
   end
