@@ -63,13 +63,13 @@ class Api::V1::ItemsController < Api::V1::BaseController
   def my_closet(array)
     items = current_user.items.closet #.where(is_giveaway: false, item_type: array)
     num = items.length
-    array.map! do |type|
+    arr = array.map do |type|
       { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
     end
     return {
       user: current_user.to_h,
       number_of_items: num,
-      user_items: array
+      user_items: arr
     }
   end
 
@@ -88,11 +88,10 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   def filter(tags, array)
     items = Item.tagged_with(tags, :match_all => true)
-    num = items.length
-    array.map! do |type|
+    arr = array.map do |type|
       { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
     end
-    return array
+    return arr
   end
 
   def item_params
