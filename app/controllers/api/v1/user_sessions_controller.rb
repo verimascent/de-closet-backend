@@ -7,7 +7,7 @@ class Api::V1::UserSessionsController < Devise::SessionsController
     puts "request #{request}"
     token = Tiddle.create_and_return_token(user, request)
     render json: {
-      user: user,
+      user: user.to_h,
       headers: {
         "X-USER-EMAIL"=> user.email,
         "X-USER-TOKEN"=> token

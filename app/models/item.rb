@@ -4,6 +4,8 @@ class Item < ApplicationRecord
   belongs_to :user
   acts_as_taggable_on :tags
 
+  scope :closet, -> () { where("items.is_giveaway = FALSE AND item_type IN (?)", ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']) }
+
   def to_h
     h = serializable_hash
     h['photo'] = photo.service_url

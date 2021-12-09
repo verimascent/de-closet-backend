@@ -12,8 +12,8 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def show
-    if item.user == current_user
-      render json: { item: item.to_h }
+    if @item.user == current_user
+      render json: { item: @item.to_h }
     else
       render json: {
         :error => "You have no rights to access that item."
@@ -25,24 +25,25 @@ class Api::V1::ItemsController < Api::V1::BaseController
     item = Item.new(item_params)
     item.user = current_user
     if item.save
-      render json: { item: item.to_h }
+      render json: { item: item.to_h, user: current_user.to_h }
     else
       puts "THIS IS ERROR MES, #{item.errors.full_messages}"
     end
   end
 
   def update
-    if item.update(item_params)
-      render json: { item: item.to_h }
+    if @item.update(item_params)
+      render json: { item: @item.to_h, user: current_user.to_h }
     else
       puts "THIS IS ERROR MES, #{item.errors.full_messages}"
     end
   end
 
   def destroy
-    if item.destroy
+    if @item.destroy
       render json: {
-        message: 'This item has been successfully deleted.'
+        message: 'This item has been successfully deleted.',
+        user: current_user.to_h
       }
     else
       puts "THIS IS ERROR MES, #{item.errors.full_messages}"
@@ -50,7 +51,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def upload
-    if item.photo.attach(params.require(:file))
+    if @item.photo.attach(params.require(:file))
       render json: { msg: 'photo uploaded' }
     else
       render json: { err: 'fail to upload' }
@@ -60,13 +61,13 @@ class Api::V1::ItemsController < Api::V1::BaseController
   private
 
   def my_closet(array)
-    items = current_user.items.where(is_giveaway: false, item_type: array)
+    items = current_user.items.closet #.where(is_giveaway: false, item_type: array)
     num = items.length
     array.map! do |type|
       { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
     end
     return {
-      user: current_user,
+      user: current_user.to_h,
       number_of_items: num,
       user_items: array
     }
@@ -79,7 +80,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
     num = items.length
     items = items.map { |item| item.all_info }
     return {
-      user: current_user,
+      user: current_user.to_h,
       number_of_items: num,
       items: items
     }
@@ -96,6 +97,6 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def find_item
-    item = Item.find(params[:id])
+    @item = Item.find(params[:id])
   end
 end
