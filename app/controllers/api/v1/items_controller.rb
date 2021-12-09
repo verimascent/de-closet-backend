@@ -2,41 +2,18 @@ class Api::V1::ItemsController < Api::V1::BaseController
   before_action :find_item, only: [:show, :update, :destroy, :upload]
 
   def index
-    @types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
-    @items = current_user.items.where(is_giveaway: false, item_type: @types)
-    @num = @items.length
-    if params[:req_type] == 'my_closet'
-      @arr = []
-      @types.map! do |type|
-        { category: type, items: @items.where(item_type: type).map {|item| item.to_h} }
-      end
-      render json: {
-        user: current_user,
-        number_of_items: @num,
-        user_items: @types
-      }
-    elsif params[:req_type] == 'giveaways'
-      @types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
-      @user = current_user
-      if params[:user_id].present?
-        @user = User.find(params[:user_id])
-      end
-      @items = @user.items.where(is_giveaway: true, item_type: @types)
-      @num = @items.length
-      @items = @items.map { |item| item.all_info }
-      render json: {
-        user: current_user,
-        number_of_items: @num,
-        items: @items
-      }
-    else
-      render json: { message: 'Please provide right req_type: my_closet OR giveaways.'}
-    end
+    types = ['Tops', 'Bottoms', 'Coats', 'Shoes', 'Dresses', 'Bags', 'Accessories']
+    arr_req = ['my_closet', 'giveaways']
+
+    request = arr_req.include?(params[:req_type]) ? params[:req_type] : 'my_closet'
+    info = send(request, types)
+    info[:user_items] = filter(params[:tag_array]) if params[:tag_array]
+    render json: info
   end
 
   def show
-    if @item.user == current_user
-      render json: { item: @item.to_h }
+    if item.user == current_user
+      render json: { item: item.to_h }
     else
       render json: {
         :error => "You have no rights to access that item."
@@ -45,35 +22,35 @@ class Api::V1::ItemsController < Api::V1::BaseController
   end
 
   def create
-    @item = Item.new(item_params)
-    @item.user = current_user
-    if @item.save
-      render json: { item: @item.to_h }
+    item = Item.new(item_params)
+    item.user = current_user
+    if item.save
+      render json: { item: item.to_h }
     else
-      puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
+      puts "THIS IS ERROR MES, #{item.errors.full_messages}"
     end
   end
 
   def update
-    if @item.update(item_params)
-      render json: { item: @item.to_h }
+    if item.update(item_params)
+      render json: { item: item.to_h }
     else
-      puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
+      puts "THIS IS ERROR MES, #{item.errors.full_messages}"
     end
   end
 
   def destroy
-    if @item.destroy
+    if item.destroy
       render json: {
         message: 'This item has been successfully deleted.'
       }
     else
-      puts "THIS IS ERROR MES, #{@item.errors.full_messages}"
+      puts "THIS IS ERROR MES, #{item.errors.full_messages}"
     end
   end
 
   def upload
-    if @item.photo.attach(params.require(:file))
+    if item.photo.attach(params.require(:file))
       render json: { msg: 'photo uploaded' }
     else
       render json: { err: 'fail to upload' }
@@ -82,11 +59,43 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   private
 
+  def my_closet(array)
+    items = current_user.items.where(is_giveaway: false, item_type: array)
+    num = items.length
+    array.map! do |type|
+      { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
+    end
+    return {
+      user: current_user,
+      number_of_items: num,
+      user_items: array
+    }
+  end
+
+  def giveaways(array)
+    user = current_user
+    user = User.find(params[:user_id]) if params[:user_id].present?
+    items = user.items.where(is_giveaway: true, item_type: array)
+    num = items.length
+    items = items.map { |item| item.all_info }
+    return {
+      user: current_user,
+      number_of_items: num,
+      items: items
+    }
+  end
+
+  def filter(tags)
+    items = Item.tagged_with(tags, :match_all => true)
+    items = items.map { |item| item.all_info }
+    items
+  end
+
   def item_params
     params.require(:item).permit(:is_giveaway, :item_type, :remark, :photo, tag_list: [])
   end
 
   def find_item
-    @item = Item.find(params[:id])
+    item = Item.find(params[:id])
   end
 end
