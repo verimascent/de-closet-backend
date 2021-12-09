@@ -6,4 +6,8 @@ class User < ApplicationRecord
 
   has_many :authentication_tokens, dependent: :destroy
   has_many :items, dependent: :destroy
+
+  def to_h
+    serializable_hash.merge!({"closet_size" => items.closet.size})
+  end
 end
