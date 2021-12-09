@@ -76,13 +76,15 @@ class Api::V1::ItemsController < Api::V1::BaseController
   def giveaways(array)
     user = current_user
     user = User.find(params[:user_id]) if params[:user_id].present?
-    items = user.items.where(is_giveaway: true, item_type: array)
+    items = user.items.out # .where(is_giveaway: true, item_type: array)
     num = items.length
-    items = items.map { |item| item.all_info }
+    array.map! do |type|
+      { category: type, items: items.where(item_type: type).map {|item| item.to_h} }
+    end
     return {
       user: current_user.to_h,
       number_of_items: num,
-      items: items
+      items: array
     }
   end
 
