@@ -2,21 +2,22 @@ class Api::V1::GiveawaysController < Api::V1::BaseController
 
   # The giveaway shall be created by the user who claims that item
   def create
-    @array = params[:selected]
-    @arr_gas = []
-    @array.each do |num|
-      @item = Item.find(num)
-      @giveaway = Giveaway.new
-      @giveaway.user = current_user
-      @giveaway.item = @item
-      if @giveaway.save
-        @arr_gas << @giveaway
-      else
-        puts "THIS IS ERROR MES, #{@giveaway.errors.full_messages}"
-        return
-      end
+    @item = Item.find(params[:item_id])
+    @giveaway = Giveaway.new
+    @giveaway.user = current_user
+    @giveaway.item = @item
+
+    unless @giveaway.save
+      puts "THIS IS ERROR MES, #{@giveaway.errors.full_messages}"
     end
-    render json: @arr_gas
+
+    if current_user.update(update_user_params)
+      render json: {
+        giveaway: @giveaway
+      }
+    else
+      puts "THIS IS ERROR MES, #{current_user.errors.full_messages}"
+    end
   end
 
   # This update action can only be invoked by the owner!
@@ -47,7 +48,7 @@ class Api::V1::GiveawaysController < Api::V1::BaseController
 
   private
 
-  def giveaway_params
-    params.require(:giveaway).permit(:id, :user_id)
+  def update_user_params
+    params.require(:user).permit(:avatar, :nickname)
   end
 end
