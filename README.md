@@ -10,4 +10,4 @@ This repository includes the backend part. To see the frontend code, please clic
 
 Scan the QR Code below to use this WeChat Mini Program:
 
-<img src="./app/assets/images/MiniAppQRCode.jpg" alt="Mini App QR Code" style="zoom:10%;" />
+<img src="./app/assets/images/MiniAppQRCode.jpg" alt="Mini App QR Code" width="30%" />
