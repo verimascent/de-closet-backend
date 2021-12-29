@@ -1,6 +1,16 @@
 class Api::V1::GiveawaysController < Api::V1::BaseController
 
   # The giveaway shall be created by the user who claims that item
+  def index
+    item = Item.find(params[:item_id])
+    giveaways_all = item.giveaways
+    num = giveaways_all.size
+    render json: {
+      num: num
+    }
+    p "num is", num
+  end
+
   def create
     item = Item.find(params[:item_id])
     giveaway = Giveaway.new
@@ -11,13 +21,13 @@ class Api::V1::GiveawaysController < Api::V1::BaseController
       puts "THIS IS ERROR MES, #{giveaway.errors.full_messages}"
     end
 
-    if current_user.update(update_user_params)
-      render json: {
-        giveaway: giveaway
-      }
-    else
-      puts "THIS IS ERROR MES, #{current_user.errors.full_messages}"
-    end
+    # if current_user.update(update_user_params)
+    #   render json: {
+    #     giveaway: giveaway
+    #   }
+    # else
+    #   puts "THIS IS ERROR MES, #{current_user.errors.full_messages}"
+    # end
   end
 
   # This update action can only be invoked by the owner!
