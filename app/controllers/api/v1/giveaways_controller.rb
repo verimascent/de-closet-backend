@@ -8,7 +8,7 @@ class Api::V1::GiveawaysController < Api::V1::BaseController
     render json: {
       num: num
     }
-    p "num is", num
+    # p "num is", num
   end
 
   def create
@@ -54,6 +54,19 @@ class Api::V1::GiveawaysController < Api::V1::BaseController
     render json: {
       item: item.all_info
     }
+  end
+
+  def destroy
+    @giveaway = Giveaway.find(params[:id])
+    p "giveaway in destroy", @giveaway
+    if @giveaway.destroy
+      render json: {
+        message: 'Your like has been successfully canceled.',
+        user: current_user.to_h
+      }
+    else
+      puts "THIS IS ERROR MES, #{giveaway.errors.full_messages}"
+    end
   end
 
   private
